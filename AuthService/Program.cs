@@ -1,6 +1,8 @@
 using System.Text;
 using AuthService.Data.Contexts;
 using AuthService.Data.Entities;
+using AuthService.Interfaces;
+using AuthService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +10,24 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataContext>(x =>
-    x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<DataContext>(x =>x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<AppUser, IdentityRole>()
+builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+{
+    options.User.RequireUniqueEmail = true;
+    options.SignIn.RequireConfirmedEmail = true;
+    options.Password.RequiredLength = 8;
+})
     .AddEntityFrameworkStores<DataContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddHttpClient("EmailVerificationProvider", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["EmailVerificationProvider:BaseUrl"]!);
+});
+
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IVerificationService, VerificationService>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -22,6 +35,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+
 .AddJwtBearer(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
