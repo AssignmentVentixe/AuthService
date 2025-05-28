@@ -76,6 +76,19 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
         return Ok();
     }
 
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("jwt", new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.None
+        });
+
+        return Ok();
+    }
+
     [HttpGet("me")]
     [Authorize]
     public IActionResult Me()
