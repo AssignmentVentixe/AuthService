@@ -112,8 +112,6 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-
-
         var user = await _userManager.FindByEmailAsync(dto.Email);
         if (user == null) return Unauthorized();
 
@@ -169,7 +167,7 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
         var user = HttpContext.User;
         var firstName = user.FindFirst(ClaimTypes.GivenName)?.Value;
         var lastName = user.FindFirst(ClaimTypes.Surname)?.Value;
-        var email = user.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+        var email = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         return Ok(new
         {
