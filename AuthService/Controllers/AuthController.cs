@@ -144,7 +144,7 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
             Expires = DateTimeOffset.UtcNow.AddHours(1)
         });
 
-        return Ok();
+        return Ok(new { token = tokenStr });
     }
 
     [HttpPost("logout")]
