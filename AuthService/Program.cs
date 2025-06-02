@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddCors(o =>
     o.AddPolicy("CorsPolicy", p =>
-        p.WithOrigins("http://localhost:5173")
+        p.WithOrigins("https://lively-hill-0b76ba003.6.azurestaticapps.net")
          .AllowAnyHeader()
          .AllowAnyMethod()
          .AllowCredentials()));
