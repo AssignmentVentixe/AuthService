@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using AuthService.Interfaces;
+﻿using AuthService.Interfaces;
 
 namespace AuthService.Services;
 
