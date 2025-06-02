@@ -141,8 +141,6 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
-            Domain = "swedencentral-01.azurewebsites.net",
-            Path = "/",
             Expires = DateTimeOffset.UtcNow.AddHours(1)
         });
 
@@ -156,9 +154,7 @@ public class AuthController(UserManager<AppUser> userManager, SignInManager<AppU
         {
             HttpOnly = true,
             Secure = true,
-            SameSite = SameSiteMode.None,
-            Domain = "swedencentral-01.azurewebsites.net",
-            Path = "/"
+            SameSite = SameSiteMode.None
         });
 
         return Ok();
