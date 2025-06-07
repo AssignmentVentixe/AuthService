@@ -1,6 +1,8 @@
 using System.Text;
 using AuthService.Data.Contexts;
 using AuthService.Data.Entities;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using AuthService.Interfaces;
 using AuthService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,7 +12,11 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<DataContext>(x =>x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var vaultUri = new Uri("https://ventixe-kv.vault.azure.net/");
+builder.Configuration.AddAzureKeyVault(vaultUri, new DefaultAzureCredential());
+
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
